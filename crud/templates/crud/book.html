@@ -1,0 +1,23 @@
+<html >
+<head>
+    
+    <title>Document</title>
+</head>
+<body>
+    <span>
+        <h1>{{book.title}}</h1>
+        {{book.description}}<br>
+        {{book.pages}}<br>
+        {{book.price}}<br>
+        {{book.language}}<br>
+        {{book.created_at}}<br>
+    </span>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <button type="submit" > ❌ </button>
+    </form>
+    <form action="{% url "crud:updatebook" book.id %}" method="get">
+        <button> Update </button>
+    </form>
+</body>
+</html>

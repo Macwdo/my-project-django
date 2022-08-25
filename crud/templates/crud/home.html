@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        New Page
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<style>
+    body {
+        background-color: rgb(255, 255, 255);
+      }
+    .title{
+
+        color: rgb(179, 150, 150);
+        font-size: x-large;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bolder;
+        width: fit-content;
+        align-items: left;
+        background-color: rgba(255, 255, 255, 0.918);
+        border-color: rgb(255, 255, 255);
+
+    }
+    .book{
+        width: fit-content;
+        font-size: larger;
+        background-color: rgb(248, 247, 247);
+        border-radius: 1px;
+        border-color: rgb(121, 39, 1);
+        border-style: solid;
+    }
+    .button{
+        width: fit-content;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+    
+    
+</style>
+<body>
+<div class="title">
+    <span>
+    Home Page
+    </span>
+</div>
+<div class="book">
+<span>
+    Books length {{book_size}} <br>
+    Create new book
+    <div class="button">
+        <form action="{% url "crud:createbook"%}" method="get">
+            <button type="submit">New book</button>
+        </form>
+        </div>
+</div>
+</span>
+
+<br>
+
+<div class="book">
+    <span>
+        <a href="{% url "crud:register" %}" >Register</a> or <a href="">Login</a>
+    </span>
+</div>
+
+
+
+<br>
+{% for books in book_data %}
+<span>
+    {{books.title}}<a href="{% url "crud:bookpage" books.id %}"><i class="fa-solid fa-paper-plane"></i></a><br>
+</span>
+
+{% endfor %}
+
+</body>
+
+
+
+</html>

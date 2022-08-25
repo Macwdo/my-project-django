@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>
+            Updating
+        </title>
+    </head>
+    <body>
+        <h1>Updating {{ book.title }}</h1>
+        <form action="" method="POST">
+        {% csrf_token %}
+        {% for box in form %}
+        <label for="{{box.id_for_label}}">{{box.label}}</label>{{box}}<br>
+        {% endfor %}
+        <button type="submit">SEND</button>
+    </form>
+    </body>
+</html>

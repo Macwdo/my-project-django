@@ -1,0 +1,27 @@
+<html>
+
+
+    <head>
+        <title>
+            Register page
+        </title>
+    </head>
+    <body>
+        <h1>Register Page --- <a href="{% url 'crud:home' %}"> Home </a></h1>
+        <form action="{% url 'crud:register_create' %}" method="POST">
+            {% csrf_token %}
+        {% for fields in form %}
+        <label for="{{fields.id_for_label}}"> {{ fields.label }}</label>
+        <span>{{fields}}-> </span><br>
+        {% if fields.help_text %}
+        <span> * {{ fields.help_text }}</span><br>
+        {% endif %}
+        {{ fields.errors }}
+        {% endfor %}
+
+        <button type="submit" > Send</button>
+    </form>
+    </body>
+
+
+</html>
