@@ -1,8 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from .models import Book
-from .forms import BooksForm, RegisterForm
+from .forms import BooksForm, LoginForm, RegisterForm
+from django.contrib.auth import authenticate, login, logout, login
 from django.contrib import messages
+from django.http import Http404
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -86,8 +89,40 @@ def register_create(request):
     else:
         return redirect(reverse('crud:register'))
     
-def login(request):
-    return render(request,'crud/login.html', 'form':form)
+    
+def login_view(request):
+    form = LoginForm()
+    return render(request, 'crud/login.html', context={'form': form})
+
+def login_create(request):
+    if not request.POST:
+        raise Http404()
+    form = LoginForm(request.POST)
+    if form.is_valid():
+        authenticate_user = authenticate(
+            username=form.cleaned_data.get('username', ''),
+            password=form.cleaned_data.get('password', '')
+        )
+        if authenticate_user is not None:
+            messages.success(request, 'You are logged in')
+            login(request, authenticate_user)
+        else:
+            messages.error(request, 'Invalid Credential')
+    else:
+        messages.error(request, 'Error To validate')
+    return redirect(reverse('crud:home'))
+
+
+@login_required(login_url='crud:login_view')
+def logout_view(request):
+    if not request.POST:
+        return redirect(reverse('crud:home'))
+    if request.POST.get('username') != request.user.username:
+        return redirect(reverse('crud:home'))
+    
+    logout(request)
+    return redirect(reverse('crud:home'))
+        
     
         
         

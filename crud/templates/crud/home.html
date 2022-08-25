@@ -37,6 +37,11 @@
         justify-content: center;
         margin: 0 auto;
     }
+    .error{
+        background-color: red;
+        color: black;
+        width: fit-content;
+    }
     
     
 </style>
@@ -62,8 +67,26 @@
 
 <div class="book">
     <span>
-        <a href="{% url "crud:register" %}" >Register</a> or <a href="">Login</a>
+        <a href="{% url "crud:register" %}" >Register</a> or <a href="{% url "crud:login"%}">Login</a>
     </span>
+</div>
+{% if request.user.is_authenticated %}
+
+<div class="book">
+    <span>{{request.user.username}}</span>
+        <form action="{% url "crud:logout"%}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="username" value="{{request.user.username}}">
+            <button>click here to logout</button>
+        </form>
+</div>
+{% endif %}
+
+<br>
+<div class="error">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
 </div>
 
 

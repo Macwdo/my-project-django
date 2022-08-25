@@ -56,6 +56,11 @@ class RegisterForm(forms.ModelForm):
             raise ValidationError(
             {'password2': 'password fields not be equal'})
             
-class LoginForm(forms.ModelForm):
-    class Meta:
+class LoginForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput())
+    password = forms.CharField(widget=forms.PasswordInput())
+    
+        
+        
+        
         
