@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from .models import Book
 from .forms import BooksForm, LoginForm, RegisterForm
-from django.contrib.auth import authenticate, login, logout, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
@@ -94,6 +94,7 @@ def login_view(request):
     form = LoginForm()
     return render(request, 'crud/login.html', context={'form': form})
 
+
 def login_create(request):
     if not request.POST:
         raise Http404()
@@ -122,10 +123,3 @@ def logout_view(request):
     
     logout(request)
     return redirect(reverse('crud:home'))
-        
-    
-        
-        
-
-
-
