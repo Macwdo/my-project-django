@@ -10,5 +10,5 @@ class ViewsTests(BookTestCase):
     
     def test_home_page_returns(self):
         book = self.book
-        title = "Hello world"
+        title = "Book Title"
         self.assertEqual(book.title, title)
