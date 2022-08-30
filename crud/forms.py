@@ -2,7 +2,12 @@ from django import forms
 from .models import Book
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+import re
 
+def strong_password(password):
+    regex = re.compile(r'^.{8,}$')
+    if not regex.match(password):
+        raise ValidationError(("Your pass need greater than 8 characters"), code='Invalid')
 
 class BooksForm(forms.ModelForm):
     description = forms.CharField(widget=forms.TextInput())
@@ -13,15 +18,13 @@ class BooksForm(forms.ModelForm):
         
         
 class RegisterForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(), error_messages={
-        'required': 'this field not be empty',
-        'min_length': 'your password must be greater than 8 characters'},
-        min_length=8)
+    password = forms.CharField(widget=forms.PasswordInput(),
+        required=True,
+        validators=[strong_password])
     password2 = forms.CharField(
         widget=forms.PasswordInput(),
         error_messages={'required': 'this field not be empty'},
-        help_text='This field must be equal password field',
-        min_length=8)
+        help_text='This field must be equal password field')
 
     class Meta:        
         model = User
@@ -33,11 +36,6 @@ class RegisterForm(forms.ModelForm):
             'password'
         ]
         
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        if len(password) >= 8:
-            return password
-
     def clean_email(self):
         email = self.cleaned_data.get('email', '')
         exist = User.objects.filter(email=email).exists()
@@ -50,8 +48,8 @@ class RegisterForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        password = cleaned_data['password']
-        password2 = cleaned_data['password2']
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
         if password != password2:
             raise ValidationError(
             {'password2': 'password fields not be equal'})
