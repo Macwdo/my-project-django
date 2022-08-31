@@ -23,4 +23,16 @@ class BookTestCase(TestCase):
             language=language,
             created_at=created_at
             )
-    
+        
+        
+    def book_data(self,book):
+        data = {
+            "title": book.title,
+            "description": book.description,
+            "pages": book.pages,
+            "price": book.price,
+            "language": book.language,
+            "created_at": book.created_at 
+        }
+        return data
+        

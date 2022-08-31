@@ -22,11 +22,11 @@ def newbook_create(request):
     if request.method == "POST":
         form = request.POST
         data_dict = {
-            "title": form["title"],
-            "description": form["description"],
-            "pages": form["pages"],
-            "price": form["price"],
-            "language": form["language"],
+            "title": form.get("title", ""),
+            "description": form.get("description", ""),
+            "pages": form.get("pages", 0),
+            "price": form.get("price", 0),
+            "language": form.get("language", ""),
         }
         Book.objects.create(**data_dict)
         return redirect(reverse("crud:home"))
@@ -50,11 +50,11 @@ def book_update(request, id):
     if request.method == "POST":
         for book in book:
             form = request.POST
-            book.title = form["title"]
-            book.description = form["description"]
-            book.pages = form["pages"]
-            book.price = form["price"]
-            book.language = form["language"]
+            book.title = form.get("title", ""),
+            book.description = form.get("description")
+            book.pages = form.get("pages")
+            book.price = form.get("price")
+            book.language = form.get("language")
             book.save()
         
         return redirect(reverse("crud:home"))
@@ -107,11 +107,14 @@ def login_create(request):
         if authenticate_user is not None:
             messages.success(request, 'You are logged in')
             login(request, authenticate_user)
+            return redirect(reverse('crud:login'))
+
         else:
             messages.error(request, 'Invalid Credential')
+            return redirect(reverse('crud:login'))
     else:
-        messages.error(request, 'Error To validate')
-    return redirect(reverse('crud:home'))
+        messages.error(request, 'Error to validate')
+        return redirect(reverse('crud:login'))
 
 
 @login_required(login_url='crud:login_view')

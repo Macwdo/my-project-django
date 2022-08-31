@@ -1,10 +1,8 @@
-from crud.forms import BooksForm, RegisterForm
 from django.test import TestCase
 from django.urls import reverse
-from parameterized import parameterized
 
 
-class BookFormsTest(TestCase):
+class WriterFormTests(TestCase):
     
     def setUp(self, *args, **kwargs) -> None:
         self.form_data = {

@@ -4,6 +4,13 @@
             Login page
         </title>
     </head>
+    <style>
+        .error{
+            background-color: red;
+            color: black;
+            width: fit-content;
+        }
+    </style>
     <body>
         <h1>Login Page --- <a href="{% url 'crud:home' %}"> Home </a></h1>
         <form action="{% url 'crud:login_create' %}" method="POST">
@@ -11,8 +18,12 @@
         {% for fields in form %}
         <label for="{{fields.id_for_label}}"> {{ fields.label }}</label>
         <span>{{fields}}-> </span><br>
-        {{ fields.errors }}
         {% endfor %}
+        <div class="error">
+            {% for message in messages %}
+            {{message}}
+            {% endfor %}
+        </div>
 
         <button type="submit" > Send</button>
     </form>
