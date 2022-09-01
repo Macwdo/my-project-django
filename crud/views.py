@@ -85,7 +85,7 @@ def register_create(request):
         user.save()
         messages.success(request, 'Usuario Registrado com Sucesso')
         del (request.session['register_form_data'])
-        return redirect(reverse('crud:home'))
+        return redirect(reverse('crud:login'))
     else:
         return redirect(reverse('crud:register'))
     
@@ -107,7 +107,7 @@ def login_create(request):
         if authenticate_user is not None:
             messages.success(request, 'You are logged in')
             login(request, authenticate_user)
-            return redirect(reverse('crud:login'))
+            return redirect(reverse('crud:home'))
 
         else:
             messages.error(request, 'Invalid Credential')

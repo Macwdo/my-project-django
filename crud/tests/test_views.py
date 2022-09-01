@@ -1,7 +1,6 @@
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-from crud.forms import LoginForm
+
 from .test_book_data import BookTestCase
 
 
@@ -58,8 +57,8 @@ class RegisterViewTest(TestCase):
             'email': 'email@gmail.com',
             'first_name': 'Fuser',
             'last_name': 'Luser',
+            'password2': 'pass1234'
         }
-        self.usercreate = User.objects.create(**self.form_data)
         return super().setUp(*args, **kwargs)
 
     def test_register_create_get_mode(self):
@@ -94,3 +93,83 @@ class RegisterViewTest(TestCase):
         response = self.client.post(url, data=self.form_data, follow=True)
         self.assertIn(msg, response.content.decode('utf-8'))
 
+    def test_author_created_can_login(self):
+        url = reverse('crud:register_create')
+        self.form_data
+        self.form_data.update({
+            'username': 'testuser',
+            'password': 'danilo21',
+            'password2': 'danilo21',
+        })
+        self.client.post(url, data=self.form_data, follow=True)
+        send_response = self.client.post(
+            reverse('crud:login_create'), data=self.form_data, follow=True)
+
+        self.assertIn('You are logged in',
+                      send_response.content.decode('utf-8'))
+
+    def test_logout_view_get_mode(self):
+        # The user need login login part /-----
+        url = reverse('crud:register_create')
+        self.form_data.update({
+            'username': 'testuser',
+            'password': 'danilo21',
+            'password2': 'danilo21',
+        })
+        self.client.post(url, data=self.form_data, follow=True)
+        self.client.post(reverse('crud:login_create'),
+                         data=self.form_data, follow=True)
+        self.client.login(username='testuser', password='danilo21')
+        #------/
+        url = reverse('crud:logout')
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse('crud:home'))
+
+    def test_logout_view_post_mode_user_correctly_loged(self):
+        url = reverse('crud:register_create')
+        self.form_data.update({
+            'username': 'testuser',
+            'password': 'danilo21',
+            'password2': 'danilo21',
+        })
+        self.client.post(url, data=self.form_data, follow=True)
+        self.client.post(reverse('crud:login_create'),
+                         data=self.form_data, follow=True)
+        self.client.login(username='testuser', password='danilo21')
+        #------/
+        url = reverse('crud:logout')
+        response = self.client.post(url,data={'username':'testuser'})
+        self.assertRedirects(response, reverse('crud:home'))
+        
+    def test_logout_view_get_mode(self):
+        # The user need login login part /-----
+        url = reverse('crud:register_create')
+        self.form_data.update({
+            'username': 'testuser',
+            'password': 'danilo21',
+            'password2': 'danilo21',
+        })
+        self.client.post(url, data=self.form_data, follow=True)
+        self.client.post(reverse('crud:login_create'),
+                         data=self.form_data, follow=True)
+        self.client.login(username='testuser', password='danilo21')
+        #------/
+        url = reverse('crud:logout')
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse('crud:home'))
+
+    def test_logout_view_post_mode_wrong_user(self):
+        url = reverse('crud:register_create')
+        self.form_data.update({
+            'username': 'testuser',
+            'password': 'danilo21',
+            'password2': 'danilo21',
+        })
+        self.client.post(url, data=self.form_data, follow=True)
+        self.client.post(reverse('crud:login_create'),
+                         data=self.form_data, follow=True)
+        self.client.login(username='testuser', password='asdalo21')
+        #------/
+        url = reverse('crud:logout')
+        response = self.client.post(url,data={'username':'otheruser'})
+        self.assertRedirects(response, reverse('crud:home'))
